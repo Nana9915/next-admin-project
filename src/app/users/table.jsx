@@ -1,8 +1,14 @@
 "use client";
-
 import * as React from "react";
-
-import { Table, TableCell, TableHead, TableHeader, TableRow, TableBody } from "@/components/ui/table";
+import { useState } from "react";
+import {
+  Table,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableBody,
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -14,14 +20,35 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MoreHorizontal, Settings } from "lucide-react";
-
+import { Delete, MoreHorizontal, Settings } from "lucide-react";
 export function UsersTable(props) {
-  const { data } = props;
+  const { data, limit } = props;
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredData = data.filter(
+    (item) =>
+      item.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.lastname.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const deletee = (id) => {
+    console.log("delete", id);
+  };
+  fetch ("http://localhost:3000/api/users/${id}", {
+    method: "Delete",
+    body: JSON.stringify({
+      
+    })
+  })
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input placeholder="Нэрээр хайх..." className="max-w-sm" />
+        <Input
+          placeholder="Нэрээр хайх..."
+          className="max-w-sm"
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
       <div className="border rounded-md">
         <Table>
@@ -38,18 +65,18 @@ export function UsersTable(props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.slice(0, 10).map((item, index) => (
+            {filteredData.slice(0, limit).map((item, index) => (
               <TableRow key={item.id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableHead>
                   <Avatar className="w-8 h-8">
-                    <AvatarImage src={item.imageUrl} alt="@shadcn" />
+                    <AvatarImage src={item.imageUrl} alt={item.firstname} />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </TableHead>
-                <TableHead>Нармандах</TableHead>
-                <TableHead>Тэмүүлэн</TableHead>
-                <TableHead>boldoo@gmail.com</TableHead>
+                <TableHead>{item.firstname}</TableHead>
+                <TableHead>{item.lastname}</TableHead>
+                <TableHead>{item.email}</TableHead>
                 <TableHead className="w-1">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -60,10 +87,18 @@ export function UsersTable(props) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => navigator.clipboard.writeText("temkanibno@gmail.com")}>Copy Email</DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          navigator.clipboard.writeText(item.email)
+                        }
+                      >
+                        Copy Email
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => deletee(item.id)}>
+                        Delete
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableHead>
