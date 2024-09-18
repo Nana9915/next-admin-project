@@ -12,6 +12,8 @@ const Users = () => {
   const [data, setData] = useState([]);
   const [limit, setLimit] = useState(10);
 
+
+
   useEffect(() => {
     fetch("/api/users")
       .then((res) => res.json())
@@ -19,6 +21,18 @@ const Users = () => {
         setData(data);
       });
   }, []);
+
+  const deleteBtn = (id) => {
+     setData(data.filter((item) => item.id !== id));
+    fetch(`/api/users/${id}`, {
+      method: "Delete",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
+  
 
   return (
     <div>
@@ -32,7 +46,7 @@ const Users = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <UsersTable limit={limit} data={data} />
+          <UsersTable limit={limit} data={data} remove={deleteBtn}/>
           {limit < data.length && (
             <div className="flex justify-center p-8">
               <Button

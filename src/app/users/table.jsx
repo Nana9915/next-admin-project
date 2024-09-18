@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Delete, MoreHorizontal, Settings } from "lucide-react";
 export function UsersTable(props) {
-  const { data, limit } = props;
+  const { data, limit, remove} = props;
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredData = data.filter(
@@ -30,15 +30,8 @@ export function UsersTable(props) {
       item.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.lastname.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const deletee = (id) => {
-    console.log("delete", id);
-  };
-  fetch ("http://localhost:3000/api/users/${id}", {
-    method: "Delete",
-    body: JSON.stringify({
-      
-    })
-  })
+  
+  
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -96,7 +89,7 @@ export function UsersTable(props) {
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => deletee(item.id)}>
+                      <DropdownMenuItem onClick={() => remove(item.id) }>
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
