@@ -12,16 +12,24 @@ export const UserCreateDialog = ({ open, onClose }) => {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" defaultValue="Pedro Duarte" />
+            <Label htmlFor="name">Овог</Label>
+            <Input id="firstname"  />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="username">Username</Label>
-            <Input id="username" defaultValue="@peduarte" />
+            <Label htmlFor="username">Нэр</Label>
+            <Input id="lastname"  />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="username">И-мэйл</Label>
+            <Input id="email"  />
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={() => onClose(false)} variant="outline" type="button">
+          <Button
+            onClick={() => onClose(false)}
+            variant="outline"
+            type="button"
+          >
             Cancel
           </Button>
           <Button type="submit">Save</Button>

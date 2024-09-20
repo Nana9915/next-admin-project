@@ -25,7 +25,7 @@ const Users = () => {
   const deleteBtn = (id) => {
      setData(data.filter((item) => item.id !== id));
     fetch(`/api/users/${id}`, {
-      method: "Delete",
+      method: "DELETE",
     })
       .then((res) => res.json())
       .then((data) => {
