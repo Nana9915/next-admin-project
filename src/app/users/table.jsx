@@ -21,14 +21,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Delete, MoreHorizontal, Settings } from "lucide-react";
+import { EditUserDialog } from "./edit-user";
 export function UsersTable(props) {
   const { data, limit, remove} = props;
   const [searchTerm, setSearchTerm] = useState("");
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const filteredData = data.filter(
     (item) =>
       item.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.lastname.toLowerCase().includes(searchTerm.toLowerCase())
+      item.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
   
@@ -88,8 +91,13 @@ export function UsersTable(props) {
                         Copy Email
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => remove(item.id) }>
+                      <DropdownMenuItem
+                        variant="outline"
+                        onClick={() => setEditModalOpen(true)}
+                      >
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => remove(item.id)}>
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -99,6 +107,8 @@ export function UsersTable(props) {
             ))}
           </TableBody>
         </Table>
+
+        <EditUserDialog open={editModalOpen} onClose={editModalOpen} />
       </div>
     </div>
   );
