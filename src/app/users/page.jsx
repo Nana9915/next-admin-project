@@ -6,9 +6,11 @@ import { TypographyH3 } from "@/components/typography/h3";
 import { UsersTable } from "./table";
 import { UserCreateDialog } from "./user-create-dialog";
 import { useEffect, useState } from "react";
+import { EditUserDialog } from "./edit-user";
 
 const Users = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [data, setData] = useState([]);
   const [limit, setLimit] = useState(10);
 
@@ -74,6 +76,10 @@ const Users = () => {
         onCreate={handleOnCreate}
         open={createModalOpen}
         onClose={setCreateModalOpen}
+      />
+      <EditUserDialog
+      Editopen={editModalOpen}
+      onEdtClose={setEditModalOpen}
       />
     </div>
   );

@@ -21,11 +21,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Delete, MoreHorizontal, Settings } from "lucide-react";
-import { EditUserDialog } from "./edit-user";
+
 export function UsersTable(props) {
-  const { data, limit, remove} = props;
+  const { data, limit, remove, onEdtClose } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const filteredData = data.filter(
     (item) =>
@@ -93,7 +92,7 @@ export function UsersTable(props) {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         variant="outline"
-                        onClick={() => setEditModalOpen(true)}
+                        onClick={() => onEdtClose(true)}
                       >
                         Edit
                       </DropdownMenuItem>
@@ -107,8 +106,6 @@ export function UsersTable(props) {
             ))}
           </TableBody>
         </Table>
-
-        <EditUserDialog open={editModalOpen} onClose={editModalOpen} />
       </div>
     </div>
   );

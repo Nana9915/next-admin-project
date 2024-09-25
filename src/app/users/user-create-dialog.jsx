@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
-export const UserCreateDialog = ({ open, onClose }) => {
+export const UserCreateDialog = ({ open, onClose, onCreate}) => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ export const UserCreateDialog = ({ open, onClose }) => {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit user</DialogTitle>
+          <DialogTitle>Create user</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -45,7 +45,7 @@ export const UserCreateDialog = ({ open, onClose }) => {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="email">Зураг</Label>
+            <Label htmlFor="imageUrl">Зураг</Label>
             <Input
               id="imageUrl"
               value={imageUrl}
@@ -63,6 +63,14 @@ export const UserCreateDialog = ({ open, onClose }) => {
           </Button>
           <Button
             type="submit"
+            onClick={() => {
+              onCreate({
+                firstname,
+                lastname,
+                email,
+                imageUrl,
+              });
+            }}
           >
             Save
           </Button>
