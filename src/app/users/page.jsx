@@ -13,8 +13,7 @@ const Users = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [data, setData] = useState([]);
   const [limit, setLimit] = useState(10);
-
-
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetch("/api/users")
@@ -44,9 +43,25 @@ const Users = () => {
     })
       .then((res) => res.json())
       .then((newData) => {
-        setData([ newData.data, ...data]);
+        setData([newData.data, ...data]);
         setCreateModalOpen(false);
       });
+  };
+  const handleOnEdit = (values) => {
+    fetch("/api/users", {
+      method: "POST",
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.json())
+      .then((newData) => {
+        setData([newData.data, ...data]);
+        setEditModalOpen(false);
+        setUser(null);
+      });
+  };
+  const handleEditClick = (user) => {
+    setUser(user);
+    setEditModalOpen(true);
   };
 
   return (
@@ -61,7 +76,12 @@ const Users = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <UsersTable limit={limit} data={data} remove={deleteBtn} />
+          <UsersTable
+            limit={limit}
+            data={data}
+            remove={deleteBtn}
+            handleEditClick={handleEditClick}
+          />
           {limit < data.length && (
             <div className="flex justify-center p-8">
               <Button variant="outline" onClick={() => setLimit(limit + 10)}>
@@ -78,8 +98,10 @@ const Users = () => {
         onClose={setCreateModalOpen}
       />
       <EditUserDialog
-      Editopen={editModalOpen}
-      onEdtClose={setEditModalOpen}
+        open={editModalOpen}
+        onClose={setEditModalOpen}
+        onEdit={handleOnEdit}
+        user={user}
       />
     </div>
   );

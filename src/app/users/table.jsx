@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Delete, MoreHorizontal, Settings } from "lucide-react";
 
 export function UsersTable(props) {
-  const { data, limit, remove, onEdtClose } = props;
+  const { data, limit, remove, handleEditClick } = props;
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredData = data.filter(
@@ -32,8 +32,7 @@ export function UsersTable(props) {
       item.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
-  
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -92,7 +91,9 @@ export function UsersTable(props) {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         variant="outline"
-                        onClick={() => onEdtClose(true)}
+                        onClick={() => {
+                          handleEditClick(item);
+                        }}
                       >
                         Edit
                       </DropdownMenuItem>
