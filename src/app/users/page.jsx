@@ -14,55 +14,86 @@ const Users = () => {
   const [data, setData] = useState([]);
   const [limit, setLimit] = useState(10);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      });
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/users");
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const result = await res.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const deleteBtn = (id) => {
+  const deleteBtn = async (id) => {
     if (confirm("Устгана гэдэгтээ итгэлтэй байна уу ?")) {
-      setData(data.filter((item) => item.id !== id));
-      fetch(`/api/users/${id}`, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
+      try {
+        await fetch(`/api/users/${id}`, {
+          method: "DELETE",
         });
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+      } catch (err) {
+        setError("Failed to delete user");
+      }
     }
   };
 
-  const handleOnCreate = (values) => {
-    fetch("/api/users", {
-      method: "POST",
-      body: JSON.stringify(values),
-    })
-      .then((res) => res.json())
-      .then((newData) => {
-        setData([newData.data, ...data]);
-        setCreateModalOpen(false);
+  const handleOnCreate = async (values) => {
+    try {
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
+      const newData = await res.json();
+      setData((prevData) => [newData.data, ...prevData]);
+      setCreateModalOpen(false);
+    } catch (err) {
+      setError("Failed to create user");
+    }
   };
-  const handleOnEdit = (values) => {
-    fetch("/api/users", {
-      method: "POST",
-      body: JSON.stringify(values),
-    })
-      .then((res) => res.json())
-      .then((newData) => {
-        setData([newData.data, ...data]);
-        setEditModalOpen(false);
-        setUser(null);
+
+  const handleOnEdit = async (values) => {
+    try {
+      const res = await fetch(`/api/users/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
+      const updatedUser = await res.json();
+      setData((prevData) =>
+        prevData.map((item) =>
+          item.id === updatedUser.data.id ? updatedUser.data : item
+        )
+      );
+      setEditModalOpen(false);
+      setUser(null);
+    } catch (err) {
+      setError("Failed to update user");
+    }
   };
+
   const handleEditClick = (user) => {
     setUser(user);
     setEditModalOpen(true);
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
